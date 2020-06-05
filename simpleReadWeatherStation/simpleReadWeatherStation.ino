@@ -31,6 +31,7 @@ void getBuffer()                                                                
       index --;
     }
   }
+  Serial.println(databuffer);
 }
 
 int transCharToInt(char *_buffer,int _start,int _stop)                               //char to int）

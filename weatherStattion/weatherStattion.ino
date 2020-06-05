@@ -6,7 +6,7 @@ SoftwareSerial mySerial(10, 11); // RX, TX
 
 // Singleton instance of the radio driver
 RH_RF95 rf95;
-float frequency = 868.0;
+float frequency = 923.0;
 char                 databuffer[35];
 
 void getBuffer()                                                                    //Get weather status data
@@ -14,9 +14,12 @@ void getBuffer()                                                                
   int index;
   for (index = 0;index < 35;index ++)
   {
+    Serial.println(index);
     if(mySerial.available())
     {
+      
       databuffer[index] = mySerial.read();
+      Serial.println(databuffer[index]);
       if (databuffer[0] != 'c')
       {
         index = -1;
@@ -27,7 +30,7 @@ void getBuffer()                                                                
       index --;
     }
   }
-  Serial.println(databuffer);
+//  Serial.println(databuffer);
 }
 
 void setup() 
@@ -59,8 +62,9 @@ void loop()
   Serial.println("Sending to LoRa Server");
   // Send a message to LoRa Server
   getBuffer();
+  
   uint8_t data[] = "Hello, this is device 1";
-  rf95.send(databuffer, sizeof(databuffer));
+  rf95.send(data, sizeof(data));
   
   rf95.waitPacketSent();
 //  Serial.println(databuffer);
@@ -68,8 +72,7 @@ void loop()
   uint8_t buf[RH_RF95_MAX_MESSAGE_LEN];
   uint8_t len = sizeof(buf);
 
-  if (rf95.waitAvailableTimeout(3000))
-  { 
+  if (rf95.waitAvailableTimeout(3000))  { 
     // Should be a reply message for us now   
     if (rf95.recv(buf, &len))
    {
