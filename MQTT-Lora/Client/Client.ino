@@ -1,16 +1,17 @@
-#include <dht.h>
+#include <SoftwareSerial.h>
 #include <SPI.h>
 #include <RH_RF95.h>
 
 // Singleton instance of the radio driver
 RH_RF95 rf95;
 float frequency = 915.0;  //frequency settings
-dht DHT;
-#define DHT11_PIN A0
-float temperature,humidity,tem,hum;
-char tem_1[8]={"\0"},hum_1[8]={"\0"};
+
+SoftwareSerial mySerial(3, 4); // RX, TX
+
+char                 databuffer[35];
+
 char *node_id = "<123456>";  //From LG01 via web Local Channel settings on MQTT.Please refer <> dataformat in here.
-uint8_t datasend[36];
+uint8_t datasend[50];
 unsigned int count = 1;
 
 void setup()
@@ -24,24 +25,31 @@ void setup()
          rf95.setSyncWord(0x34);
 }
 
-void dhtTem()
+void getBuffer()                                                                    //Get weather status data
 {
-       temperature = DHT.read11(DHT11_PIN);    //Read Tmperature data
-       tem = DHT.temperature*1.0;      
-       humidity = DHT.read11(DHT11_PIN);      //Read humidity data
-       hum = DHT.humidity* 1.0;             
-       Serial.println(F("The temperature and humidity:"));
-       Serial.print("[");
-       Serial.print(tem);
-       Serial.print("℃");
-       Serial.print(",");
-       Serial.print(hum);
-       Serial.print("%");
-       Serial.print("]");
-       Serial.println("");
-       delay(5000);
+  int index;
+  for (index = 0;index < 35;index ++)
+  {
+//    Serial.println(index);
+    if(mySerial.available())
+    {
+      
+      databuffer[index] = mySerial.read();
+ //     Serial.println(databuffer[index]);
+      if (databuffer[0] != 'c')
+      {
+        index = -1;
+      }
+    }
+    else
+    {
+      index --;
+    }
+  }
+  Serial.println(databuffer);
 }
-void dhtWrite()
+
+void dataWrite()
 {
     char data[50] = "\0";
     for(int i = 0; i < 50; i++)
@@ -49,15 +57,8 @@ void dhtWrite()
        data[i] = node_id[i];
     }
 
-    dtostrf(tem,0,1,tem_1);
-    dtostrf(hum,0,1,hum_1);
-
-    // Serial.println(tem_1);
-     strcat(data,"field1=");
-     strcat(data,tem_1);
-     strcat(data,"&field2=");
-     strcat(data,hum_1);
-     strcpy((char *)datasend,data);
+    strcat(data,databuffer);
+    strcpy((char *)datasend,data);
      
    Serial.println((char *)datasend);
     //Serial.println(sizeof datasend);
@@ -107,8 +108,8 @@ void loop()
     Serial.print("COUNT=");
     Serial.print(count);
     Serial.println("    ###########");
-     count++;
-     dhtTem();
-     dhtWrite();
-     SendData();
+    count++;
+    getBuffer();
+    dataWrite();
+    SendData();
 }
