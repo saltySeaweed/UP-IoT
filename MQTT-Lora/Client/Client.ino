@@ -17,6 +17,7 @@ unsigned int count = 1;
 void setup()
 {
       Serial.begin(9600);
+      mySerial.begin(9600);
       Serial.println(F("Start MQTT Example"));
           if (!rf95.init())
       Serial.println(F("init failed"));
@@ -30,7 +31,7 @@ void getBuffer()                                                                
   int index;
   for (index = 0;index < 35;index ++)
   {
-//    Serial.println(index);
+ //   Serial.println(index);
     if(mySerial.available())
     {
       
@@ -111,5 +112,5 @@ void loop()
     count++;
     getBuffer();
     dataWrite();
-    SendData();
+//    SendData();
 }
