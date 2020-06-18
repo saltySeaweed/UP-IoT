@@ -4,7 +4,7 @@
 
 // Singleton instance of the radio driver
 RH_RF95 rf95;
-float frequency = 915.0;  //frequency settings
+float frequency = 923.0;  //frequency settings
 
 SoftwareSerial mySerial(3, 4); // RX, TX
 
@@ -23,7 +23,10 @@ void setup()
       Serial.println(F("init failed"));
          rf95.setFrequency(frequency);
          rf95.setTxPower(27);
-         rf95.setSyncWord(0x34);
+        rf95.setSpreadingFactor(7);
+        rf95.setSignalBandwidth(125000);
+        rf95.setCodingRate4(5);
+        rf95.setSyncWord(0x34);
 }
 
 void getBuffer()                                                                    //Get weather status data
@@ -112,5 +115,5 @@ void loop()
     count++;
     getBuffer();
     dataWrite();
-//    SendData();
+    SendData();
 }

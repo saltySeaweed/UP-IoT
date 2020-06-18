@@ -26,7 +26,7 @@ const long sendpkt_interval = 10000;  // 10 seconds for replay.
 int debug = 1;
 int SF,Denominator;
 long SBW;
-uint32_t freq = 915000000;
+uint32_t freq = 923000000;
 char cr1[2];
 char sbw1[2];
 char sf1[3];
@@ -66,7 +66,7 @@ void ReceiveData()
     // Should be a message for us now   
     uint8_t buf[RH_RF95_MAX_MESSAGE_LEN];
     uint8_t len = sizeof(buf);
-   
+    Console.println("xxx");
     if (rf95.recv(buf, &len))
     {
          RH_RF95::printBuffer("request: ", buf, len);
