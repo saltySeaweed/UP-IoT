@@ -1,3 +1,13 @@
+/*
+  Private LoRa protocol example :
+  Support Devices: LG01 Single Channel LoRa Gateway
+  This sketch is running in LG01. LG01 with firmware version v4.3.3 or above
+  Example sketch shows how to get sensor data from remote LoRa Sensor and Store the data into LG01. 
+  The LG01 has daemon script to check the data periodically and update the data to IoT server. 
+  The LoRa Protocol use here is private LoRa protocol which base on RadioHead Library. 
+  Created 26 March 2018
+  by Dragino Tech <support@dragino.com>
+*/
 #define BAUDRATE 115200
 #include <Console.h>
 #include <SPI.h>
@@ -31,11 +41,11 @@ void setup()
   
    if (!rf95.init())
         Console.println("init failed");
-        rf95.setFrequency((double)freq/1000000);
+        rf95.setFrequency(923.0);
         rf95.setTxPower(13);
-        rf95.setSpreadingFactor(SF);
-        rf95.setSignalBandwidth(SBW);
-        rf95.setCodingRate4(Denominator);
+        rf95.setSpreadingFactor(7);
+        rf95.setSignalBandwidth(125000);
+        rf95.setCodingRate4(5);
         rf95.setSyncWord(0x34);
        // show_config();    //LG01 configure be shown
         writeVersion();
@@ -110,7 +120,7 @@ void ReceiveData()
         Console.println(F("Sent a reply to Node and update data to IoT Server."));
            
      Process p;
-     p.begin("store_data");
+     p.begin("/root/Test/Test.sh");
      p.addParameter(id1);
      p.addParameter(data);  
      p.run();    

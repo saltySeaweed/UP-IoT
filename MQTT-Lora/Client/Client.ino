@@ -11,7 +11,7 @@ SoftwareSerial mySerial(3, 4); // RX, TX
 char                 databuffer[35];
 
 char *node_id = "<12345>";  //From LG01 via web Local Channel settings on MQTT.Please refer <> dataformat in here.
-uint8_t datasend[100];
+uint8_t datasend[128];
 unsigned int count = 1;
 
 void setup()
@@ -50,20 +50,21 @@ void getBuffer()                                                                
       index --;
     }
   }
-  Serial.println(databuffer);
+//  Serial.println(databuffer);
+delay(5000);
 }
 
 void dataWrite()
 {
-    char data[100] = "\0";
+    char data[64] = "\0";
     for(int i = 0; i < 50; i++)
     {
        data[i] = node_id[i];
     }
-    strcat(data,"field1=");
-    strcat(data,databuffer);
-    strcat(data,"&field2=");
-    strcat(data,"field2");
+//    strcat(data,"field1=");
+//    strcat(data,databuffer);
+    strcat(data,"Hello World");
+//    strcat(data,"field2");
     strcpy((char *)datasend,data);
      
    Serial.println((char *)datasend);
