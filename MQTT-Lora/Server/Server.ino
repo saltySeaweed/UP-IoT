@@ -23,10 +23,10 @@ static uint8_t packet[64];
 int data_pos;
 boolean data_format=false;
 const long sendpkt_interval = 10000;  // 10 seconds for replay.
-int debug = 1;
+int debug = 0;
 int SF,Denominator;
 long SBW;
-uint32_t freq = 923000000;
+uint32_t freq;
 char cr1[2];
 char sbw1[2];
 char sf1[3];
@@ -42,10 +42,10 @@ void setup()
    if (!rf95.init())
         Console.println("init failed");
         rf95.setFrequency((double)freq/1000000);
-        rf95.setTxPower(27);
-        rf95.setSpreadingFactor(7);
-        rf95.setSignalBandwidth(125000);
-        rf95.setCodingRate4(5);
+        rf95.setTxPower(13);
+        rf95.setSpreadingFactor(SF);
+        rf95.setSignalBandwidth(SBW);
+        rf95.setCodingRate4(Denominator);
         rf95.setSyncWord(0x34);
        // show_config();    //LG01 configure be shown
         writeVersion();
@@ -66,7 +66,7 @@ void ReceiveData()
     // Should be a message for us now   
     uint8_t buf[RH_RF95_MAX_MESSAGE_LEN];
     uint8_t len = sizeof(buf);
-    Console.println("xxx");
+   
     if (rf95.recv(buf, &len))
     {
          RH_RF95::printBuffer("request: ", buf, len);
@@ -98,7 +98,7 @@ void ReceiveData()
                 if (data_pos < len) 
                 data_format=true;
                 break; //Get ASCII >, so break;
-                data_format=false;
+                data_format==false;
                 break; // Data Format mismatch, quit process. 
               } 
           }
@@ -112,12 +112,12 @@ void ReceiveData()
           {
             data[k-(i+1)]=buf[k];
           }
-      Console.println("king");
+
       //Console.println(id1);
      // Console.println((char*)data);          
       rf95.send(data, sizeof(data));
       rf95.waitPacketSent();
-      Console.println(F("Sent a reply to Node and update data to IoT Server."));
+        Console.println(F("Sent a reply to Node and update data to IoT Server."));
            
      Process p;
      p.begin("store_data");
