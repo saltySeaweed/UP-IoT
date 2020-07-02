@@ -18,6 +18,7 @@ char                 databuffer[35];
 void setup()
 {
       Serial.begin(9600);
+      mySerial.begin(9600);
       Serial.println(F("Start MQTT Example"));
           if (!rf95.init())
       Serial.println(F("init failed"));
@@ -65,7 +66,7 @@ void getBuffer()                                                                
       index --;
     }
   }
-//  Serial.println(databuffer);
+  Serial.println(databuffer);
 delay(1000);
 }
 void dhtWrite()
@@ -79,11 +80,11 @@ void dhtWrite()
     dtostrf(tem,0,1,tem_1);
     dtostrf(hum,0,1,hum_1);
 
-    // Serial.println(tem_1);
- //    strcat(data,"field1=");
+     Serial.println(tem_1);
+     strcat(data,"t=");
      strcat(data,databuffer);
-  //   strcat(data,"&field2=");
-  //   strcat(data,hum_1);
+     strcat(data,"&h=");
+     strcat(data,hum_1);
      strcpy((char *)datasend,data);
      
    //Serial.println((char *)datasend);
@@ -135,6 +136,7 @@ void loop()
     Serial.print(count);
     Serial.println("    ###########");
      count++;
+     dhtTem();
      getBuffer();
      dhtWrite();
      SendData();
