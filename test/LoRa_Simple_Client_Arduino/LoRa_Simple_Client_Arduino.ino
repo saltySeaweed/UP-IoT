@@ -80,11 +80,11 @@ void dhtWrite()
     dtostrf(tem,0,1,tem_1);
     dtostrf(hum,0,1,hum_1);
 
-     Serial.println(tem_1);
-     strcat(data,"t=");
+ //    Serial.println(tem_1);
+ //    strcat(data,"t=");
      strcat(data,databuffer);
-     strcat(data,"&h=");
-     strcat(data,hum_1);
+//     strcat(data,"&h=");
+//     strcat(data,hum_1);
      strcpy((char *)datasend,data);
      
    //Serial.println((char *)datasend);
@@ -136,7 +136,7 @@ void loop()
     Serial.print(count);
     Serial.println("    ###########");
      count++;
-     dhtTem();
+ //    dhtTem();
      getBuffer();
      dhtWrite();
      SendData();
