@@ -52,6 +52,6 @@ mqttc.on_subscribe = on_subscribe
 # Uncomment to enable debug messages
 # mqttc.on_log = on_log
 mqttc.connect("127.0.0.1", 1883, 60)
-mqttc.subscribe("demo/test", qos=0)
+mqttc.subscribe("/topic", qos=0)
 
 mqttc.loop_forever()

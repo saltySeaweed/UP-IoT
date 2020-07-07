@@ -1,19 +1,24 @@
 #include <SPI.h>
 #include <RH_RF95.h>
+#include <SoftwareSerial.h>
 
 // Singleton instance of the radio driver
 RH_RF95 rf95;
 float frequency = 923.0;  //frequency settings
 
+SoftwareSerial mySerial(3, 4); // RX, TX
+
 float temperature,humidity,tem,hum;
 char tem_1[8]={"\0"},hum_1[8]={"\0"};
 char *node_id = "<12345>";  //From LG01 via web Local Channel settings on MQTT.Please refer <> dataformat in here.
-uint8_t datasend[36];
+uint8_t datasend[64];
 unsigned int count = 1;
+char                 databuffer[35];
 
 void setup()
 {
       Serial.begin(9600);
+      mySerial.begin(9600);
       Serial.println(F("Start MQTT Example"));
           if (!rf95.init())
       Serial.println(F("init failed"));
@@ -37,7 +42,32 @@ void dhtTem()
        Serial.print("%");
        Serial.print("]");
        Serial.println("");
-       delay(5000);
+       delay(1000);
+}
+
+void getBuffer()                                                                    //Get weather status data
+{
+  int index;
+  for (index = 0;index < 35;index ++)
+  {
+ //   Serial.println(index);
+    if(mySerial.available())
+    {
+      
+      databuffer[index] = mySerial.read();
+ //     Serial.println(databuffer[index]);
+      if (databuffer[0] != 'c')
+      {
+        index = -1;
+      }
+    }
+    else
+    {
+      index --;
+    }
+  }
+  Serial.println(databuffer);
+delay(1000);
 }
 void dhtWrite()
 {
@@ -50,11 +80,11 @@ void dhtWrite()
     dtostrf(tem,0,1,tem_1);
     dtostrf(hum,0,1,hum_1);
 
-    // Serial.println(tem_1);
-     strcat(data,"field1=");
-     strcat(data,tem_1);
-     strcat(data,"&field2=");
-     strcat(data,hum_1);
+ //    Serial.println(tem_1);
+ //    strcat(data,"t=");
+     strcat(data,databuffer);
+//     strcat(data,"&h=");
+//     strcat(data,hum_1);
      strcpy((char *)datasend,data);
      
    //Serial.println((char *)datasend);
@@ -93,7 +123,7 @@ void SendData()
   {
     Serial.println("No reply, is LoRa server running?");
   }
-  delay(5000);
+  delay(1000);
 }
     
     
@@ -106,7 +136,8 @@ void loop()
     Serial.print(count);
     Serial.println("    ###########");
      count++;
-     dhtTem();
+ //    dhtTem();
+     getBuffer();
      dhtWrite();
      SendData();
 }

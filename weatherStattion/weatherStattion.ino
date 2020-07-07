@@ -31,6 +31,7 @@ void getBuffer()                                                                
     }
   }
   Serial.println(databuffer);
+  delay(5000);
 }
 
 void setup() 

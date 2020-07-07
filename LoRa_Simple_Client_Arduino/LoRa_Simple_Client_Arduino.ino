@@ -77,5 +77,5 @@ void loop()
   {
     Serial.println("No reply, is LoRa server running?");
   }
-  delay(5000);
+  delay(1000);
 }

@@ -110,7 +110,7 @@ void ReceiveData()
         Console.println(F("Sent a reply to Node and update data to IoT Server."));
            
      Process p;
-     p.begin("store_data");
+     p.begin("/root/Test/Test.sh");
      p.addParameter(id1);
      p.addParameter(data);  
      p.run();    
