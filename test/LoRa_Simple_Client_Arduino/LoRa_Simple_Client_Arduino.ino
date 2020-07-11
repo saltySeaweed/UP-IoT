@@ -27,24 +27,6 @@ void setup()
          rf95.setSyncWord(0x34);
 }
 
-void dhtTem()
-{
-       temperature = 40;    //Read Tmperature data
-       tem = 40;      
-       humidity = 35;      //Read humidity data
-       hum = 35;             
-       Serial.println(F("The temperature and humidity:"));
-       Serial.print("[");
-       Serial.print(tem);
-       Serial.print("℃");
-       Serial.print(",");
-       Serial.print(hum);
-       Serial.print("%");
-       Serial.print("]");
-       Serial.println("");
-       delay(1000);
-}
-
 void getBuffer()                                                                    //Get weather status data
 {
   int index;
@@ -67,7 +49,7 @@ void getBuffer()                                                                
     }
   }
   Serial.println(databuffer);
-delay(1000);
+  delay(1000);
 }
 void dhtWrite()
 {
@@ -80,14 +62,11 @@ void dhtWrite()
     dtostrf(tem,0,1,tem_1);
     dtostrf(hum,0,1,hum_1);
 
- //    Serial.println(tem_1);
- //    strcat(data,"t=");
-     strcat(data,databuffer);
-//     strcat(data,"&h=");
-//     strcat(data,hum_1);
-     strcpy((char *)datasend,data);
+    strcat(data,databuffer);
+
+    strcpy((char *)datasend,data);
      
-   //Serial.println((char *)datasend);
+    //Serial.println((char *)datasend);
     //Serial.println(sizeof datasend);
       
 }
@@ -135,9 +114,8 @@ void loop()
     Serial.print("COUNT=");
     Serial.print(count);
     Serial.println("    ###########");
-     count++;
- //    dhtTem();
-     getBuffer();
-     dhtWrite();
-     SendData();
+    count++;
+    getBuffer();
+    dhtWrite();
+    SendData();
 }
