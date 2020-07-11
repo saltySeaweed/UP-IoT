@@ -29,6 +29,10 @@ void setup()
 }
 
 void checkBuffer(){
+  if (databuffer[0]=='c'&&databuffer[4]=='s'&&databuffer[8]=='g'&&databuffer[12]=='t'&&databuffer[16]=='r'&&databuffer[20]=='p'&&databuffer[24]=='h'&&databuffer[27]=='b'){
+    checkBuffer = true;
+  }
+  else checkBuffer = false;
 }
 
 void getBuffer()                                                                    //Get weather status data
