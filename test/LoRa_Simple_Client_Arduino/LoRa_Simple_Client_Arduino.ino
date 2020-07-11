@@ -14,6 +14,7 @@ char *node_id = "<12345>";  //From LG01 via web Local Channel settings on MQTT.P
 uint8_t datasend[64];
 unsigned int count = 1;
 char                 databuffer[35];
+bool check = false;
 
 void setup()
 {
@@ -25,6 +26,9 @@ void setup()
          rf95.setFrequency(frequency);
          rf95.setTxPower(13);
          rf95.setSyncWord(0x34);
+}
+
+void checkBuffer(){
 }
 
 void getBuffer()                                                                    //Get weather status data
@@ -49,6 +53,7 @@ void getBuffer()                                                                
     }
   }
   Serial.println(databuffer);
+  checkBuffer();
   delay(1000);
 }
 void dhtWrite()
@@ -117,5 +122,7 @@ void loop()
     count++;
     getBuffer();
     dhtWrite();
-    SendData();
+    if (checkBuffer == true){
+      SendData();
+    }
 }
